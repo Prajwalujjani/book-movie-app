@@ -1,52 +1,39 @@
 import React, { useState } from "react";
-import Header from "../common/header/Header";
-import LoginRegisterModal from "../common/login-register-modal/LoginRegisterModal";
+import Home from "../screens/home/Home";
+import Details from "../screens/details/Details";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import BookShow from "../screens/bookshow/BookShow";
+import Confirmation from "../screens/confirmation/Confirmation";
 
-function Controller() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loginRegisterModalShow, setLoginRegisterModalShow] = useState(false);
-
-  const logInOut = () => {
-    setIsLoggedIn(!isLoggedIn);
-  };
-
-  const bookShowHandler = () => {
-    if (!isLoggedIn) {
-      setLoginRegisterModalShow(true);
-      return;
-    }
-  };
-
-  const closeLoginRegisterModal = () => {
-    setLoginRegisterModalShow(false);
-  };
-
-  const handleLogin = (username, password) => {
-    alert("Username: " + username + " Password: " + password);
-  };
-
-  const handleRegister = (firstname, lastname, email, password, contactNo) => {
-    alert(
-      `Firstname: ${firstname} Lastname: ${lastname} Email: ${email} Password: ${password} ContactNo: ${contactNo}`
-    );
-  };
+const Controller = () => {
+  const baseUrl = "/api/v1/";
 
   return (
-    <div>
-      <Header
-        isLoggedIn={isLoggedIn}
-        loginHandler={logInOut}
-        logoutHandler={logInOut}
-        bookShowHandler={bookShowHandler}
-      />
-      <LoginRegisterModal
-        isOpen={loginRegisterModalShow}
-        closeModal={closeLoginRegisterModal}
-        handleLogin={handleLogin}
-        handleRegister={handleRegister}
-      />
-    </div>
+    <Router>
+      <div className="main-container">
+        <Route
+          exact
+          path="/"
+          render={(props) => <Home {...props} baseUrl={baseUrl} />}
+        />
+        <Route
+          exact
+          path="/movie/:id"
+          render={(props) => <Details {...props} baseUrl={baseUrl} />}
+        />
+        <Route
+          exact
+          path="/bookshow/:id"
+          render={(props) => <BookShow {...props} baseUrl={baseUrl} />}
+        />
+        <Route
+          exact
+          path="/confirm/:id"
+          render={(props) => <Confirmation {...props} baseUrl={baseUrl} />}
+        />
+      </div>
+    </Router>
   );
-}
+};
 
 export default Controller;
