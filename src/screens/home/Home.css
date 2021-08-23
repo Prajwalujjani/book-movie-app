@@ -1,0 +1,27 @@
+.upcoming-movies-heading {
+  background-color: #ff9999;
+  padding: 8px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+ul.upcoming-movies {
+  flex-wrap: nowrap;
+}
+
+.main-container {
+  display: flex;
+}
+
+.released-movies.container {
+  width: 76%;
+  margin-right: 16px;
+}
+
+.filters-container {
+  width: 24%;
+}
+
+.clickable-movie-poster:hover {
+  cursor: pointer;
+}
