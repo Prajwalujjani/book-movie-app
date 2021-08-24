@@ -11,6 +11,12 @@ import CardContent from "@material-ui/core/CardContent";
 import FormControl from "@material-ui/core/FormControl";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import Checkbox from "@material-ui/core/Checkbox";
+import ListItemText from "@material-ui/core/ListItemText";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 import { createMuiTheme } from "@material-ui/core/styles";
 
 function Home(props) {
@@ -24,11 +30,19 @@ function Home(props) {
     },
   };
 
+  const initialFilters = {
+    movieName: "",
+    genre: [],
+    artist: [],
+    releaseDateStart: "",
+    releaseDateEnd: "",
+  };
+
   const [upcomingMovies, setUpcomingMovies] = useState([]);
   const [releasedMovies, setReleasedMovies] = useState([]);
-  const [filters, setFilters] = useState({
-    movieName: "",
-  });
+  const [genres, setGenres] = useState([]);
+  const [artists, setArtists] = useState([]);
+  const [filters, setFilters] = useState(initialFilters);
 
   const handleLogin = () => {
     console.log("handle login");
@@ -51,7 +65,7 @@ function Home(props) {
     const dd = today.getDate() < 10 ? `0${today.getDate()}` : today.getDate();
     const mm =
       today.getMonth() < 10 ? `0${today.getMonth()}` : today.getMonth();
-    const start_date = `${yyyy}-${mm}-${dd}`;
+    const start_date = `${yyyy}-${mm}-${dd}`; // TODO: Use this in params
     fetch(props.baseUrl + `movies`, {
       method: "GET",
       headers: {
@@ -77,6 +91,32 @@ function Home(props) {
       });
   };
 
+  const getGenres = () => {
+    fetch(props.baseUrl + `genres`, {
+      method: "GET",
+      headhers: {
+        Accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setGenres(data.genres);
+      });
+  };
+
+  const getArtists = () => {
+    fetch(props.baseUrl + `artists`, {
+      method: "GET",
+      headhers: {
+        Accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setArtists(data.artists);
+      });
+  };
+
   const getMovieClickHandler = (movieId) => {
     return function () {
       props.history.push({
@@ -88,7 +128,43 @@ function Home(props) {
   useEffect(() => {
     getUpcomingMovies();
     getReleasedMovies();
+    getGenres();
+    getArtists();
   }, []);
+
+  const getFilteredMovies = () => {
+    const queryParams = `title=${filters.movieName}&start_date=${
+      filters.releaseDateStart
+    }&end_date=${filters.releaseDateEnd}&genre=${filters.genre.join(
+      ", "
+    )}&artists=${filters.artist.join(", ")}`;
+
+    fetch(props.baseUrl + `movies?${queryParams}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setReleasedMovies(data.movies);
+      });
+  };
+
+  const applyFilters = () => {
+    if (
+      filters.movieName == initialFilters.movieName &&
+      filters.releaseDateEnd == initialFilters.releaseDateEnd &&
+      filters.releaseDateStart == initialFilters.releaseDateStart &&
+      filters.genre.join(",") == initialFilters.genre.join(",") &&
+      filters.artist.join(",") == initialFilters.artist.join(",")
+    ) {
+      getReleasedMovies();
+      return;
+    }
+
+    getFilteredMovies();
+  };
 
   return (
     <div className="home-page-container">
@@ -130,12 +206,15 @@ function Home(props) {
         </div>
         <div className="filters-container">
           <Card>
-            <CardContent style={{ ...styles.cardHeading, ...styles.cardItem }}>
-              <span>FIND MOVIES BY:</span>
-            </CardContent>
-
-            <CardContent style={{ ...styles.cardItem }}>
-              <FormControl component="div" required className="input-field">
+            <CardContent style={{ display: "flex", flexDirection: "column" }}>
+              <span style={{ ...styles.cardHeading, ...styles.cardItem }}>
+                FIND MOVIES BY:
+              </span>
+              <FormControl
+                component="div"
+                required
+                className="input-field"
+                style={{ ...styles.cardItem }}>
                 <InputLabel htmlFor="movieName">Movie Name</InputLabel>
                 <Input
                   id="movieName"
@@ -144,14 +223,116 @@ function Home(props) {
                   onChange={handleFormInput}
                 />
               </FormControl>
-              <FormControl component="div" required className="input-field">
-                <InputLabel htmlFor="movieName">Movie Name</InputLabel>
+              <FormControl
+                component="div"
+                required
+                className="input-field"
+                style={{ ...styles.cardItem }}>
+                <InputLabel htmlFor="genre">Genre</InputLabel>
+                <Select
+                  id="genre"
+                  name="genre"
+                  multiple
+                  value={filters.genre}
+                  onChange={handleFormInput}
+                  input={<Input id="select-multiple-checkbox" />}
+                  renderValue={(selected) => selected.join(", ")}>
+                  {genres.map((genre) => (
+                    <MenuItem key={genre.id} value={genre.genre}>
+                      <Checkbox
+                        checked={filters.genre.indexOf(genre.genre) > -1}
+                      />
+                      <ListItemText primary={genre.description} />
+                    </MenuItem>
+                  ))}
+                </Select>
                 <Input
-                  id="movieName"
-                  name="movieName"
-                  value={filters.movieName}
+                  style={{
+                    visibility: "hidden",
+                    height: "0px",
+                  }}
+                />
+              </FormControl>
+              <FormControl
+                component="div"
+                required
+                className="input-field"
+                style={{ ...styles.cardItem }}>
+                <InputLabel htmlFor="artist">Artist</InputLabel>
+                <Select
+                  id="artist"
+                  name="artist"
+                  multiple
+                  value={filters.artist}
+                  onChange={handleFormInput}
+                  input={<Input id="select-multiple-checkbox" />}
+                  renderValue={(selected) => selected.join(", ")}>
+                  {artists.map((artist) => (
+                    <MenuItem
+                      key={artist.id}
+                      value={`${artist.first_name} ${artist.last_name}`}>
+                      <Checkbox
+                        checked={
+                          filters.artist.indexOf(
+                            `${artist.first_name} ${artist.last_name}`
+                          ) > -1
+                        }
+                      />
+                      <ListItemText
+                        primary={`${artist.first_name} ${artist.last_name}`}
+                      />
+                    </MenuItem>
+                  ))}
+                </Select>
+                <Input
+                  style={{
+                    visibility: "hidden",
+                    height: "0px",
+                  }}
+                />
+              </FormControl>
+              <FormControl
+                component="div"
+                required
+                className="input-field"
+                style={{ ...styles.cardItem }}>
+                <TextField
+                  id="release-date-start"
+                  name="releaseDateStart"
+                  type="date"
+                  label="Release Date Start"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={filters.releaseEndDate}
                   onChange={handleFormInput}
                 />
+              </FormControl>
+              <FormControl
+                component="div"
+                required
+                className="input-field"
+                style={{ ...styles.cardItem }}>
+                <TextField
+                  id="release-date-end"
+                  name="releaseDateEnd"
+                  type="date"
+                  label="Release Date End"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={filters.releaseEndDate}
+                  onChange={handleFormInput}
+                />
+              </FormControl>
+              <FormControl component="div" style={{ ...styles.cardItem }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={applyFilters}
+                  component="div">
+                  APPLY
+                </Button>
               </FormControl>
             </CardContent>
           </Card>

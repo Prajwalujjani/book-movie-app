@@ -14,7 +14,7 @@ ul.upcoming-movies {
   display: flex;
 }
 
-.released-movies.container {
+.released-movies-container {
   width: 76%;
   margin: 16px;
 }
