@@ -7,6 +7,7 @@
 
 ul.upcoming-movies {
   flex-wrap: nowrap;
+  margin: 0px !important;
 }
 
 .main-container {
@@ -15,11 +16,12 @@ ul.upcoming-movies {
 
 .released-movies.container {
   width: 76%;
-  margin-right: 16px;
+  margin: 16px;
 }
 
 .filters-container {
   width: 24%;
+  margin: 16px;
 }
 
 .clickable-movie-poster:hover {
