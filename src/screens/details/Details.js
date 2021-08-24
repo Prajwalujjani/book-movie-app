@@ -84,6 +84,12 @@ function Details(props) {
                   "v"
                 )}
                 onReady={onReady}
+                opts={{
+                  width: "100%",
+                  playerVars: {
+                    autoplay: 1,
+                  },
+                }}
               />
             </div>
           </div>
