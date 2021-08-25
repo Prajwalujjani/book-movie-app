@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Header from "../../common/header/Header";
 import "./Details.css";
-import Typography from "@material-ui/core/Typography";
 import YouTube from "react-youtube";
+
+// material-ui imports
+import Typography from "@material-ui/core/Typography";
+import StarBorderIcon from "@material-ui/icons/StarBorder";
+import RatingStars from "../../common/rating-stars/RatingStars";
 
 function Details(props) {
   const [movieDetails, setMovieDetails] = useState();
@@ -76,9 +80,7 @@ function Details(props) {
               </Typography>
             </div>
             <div className="trailer-block">
-              <Typography>
-                <span className="bold-text">Trailer:</span>
-              </Typography>
+              <Typography className="bold-text">Trailer:</Typography>
               <YouTube
                 videoId={new URL(movieDetails.trailer_url).searchParams.get(
                   "v"
@@ -86,14 +88,19 @@ function Details(props) {
                 onReady={onReady}
                 opts={{
                   width: "100%",
-                  playerVars: {
-                    autoplay: 1,
-                  },
                 }}
               />
             </div>
           </div>
-          <div className="right"></div>
+          <div className="right">
+            <Typography className="bold-text">Rate this movie:</Typography>
+            <div className="rating-stars-container">
+              <RatingStars />
+            </div>
+            <Typography className="artists-block-title bold-text">
+              Artists:
+            </Typography>
+          </div>
         </div>
       )}
     </div>
