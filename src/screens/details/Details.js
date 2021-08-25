@@ -37,16 +37,15 @@ function Details(props) {
   return (
     <div className="details-page-container">
       <Header
-        isLoggedIn={false}
-        loginHandler={() => {}}
-        logoutHandler={() => {}}
-        bookShowHandler={() => {}}
+        baseUrl={props.baseUrl}
+        movieId={props.match.params.id}
+        history={props.history}
       />
       <Typography
         component="div"
         className="back-to-home-button"
         onClick={() => {
-          props.history.goBack();
+          props.history.push("/");
         }}>
         &#60; Back to home
       </Typography>

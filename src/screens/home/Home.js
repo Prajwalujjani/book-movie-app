@@ -168,12 +168,7 @@ function Home(props) {
 
   return (
     <div className="home-page-container">
-      <Header
-        isLoggedIn={false}
-        loginHandler={handleLogin}
-        logoutHandler={handleLogout}
-        bookShowHandler={handleBookShowFromHeader}
-      />
+      <Header baseUrl={props.baseUrl} />
       <div className="upcoming-movies-heading">Upcoming Movies</div>
       <GridList className="upcoming-movies" cols={6} cellHeight={250}>
         {upcomingMovies.map((movie) => (

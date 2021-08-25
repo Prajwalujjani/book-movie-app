@@ -47,16 +47,30 @@ function LoginRegisterModal({
   };
 
   const submitLoginForm = () => {
-    handleLogin(formValues.username, formValues.password);
+    handleLogin(formValues.username, formValues.password).then(
+      () => {
+        closeModal();
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   };
 
   const submitRegisterForm = () => {
     handleRegister(
+      formValues.email,
       formValues.firstname,
       formValues.lastname,
-      formValues.email,
-      formValues.password,
-      formValues.contactNo
+      formValues.contactNo,
+      formValues.password
+    ).then(
+      () => {
+        closeModal();
+      },
+      (err) => {
+        console.log(err);
+      }
     );
   };
 
@@ -103,8 +117,7 @@ function LoginRegisterModal({
             variant="contained"
             color="primary"
             onClick={submitLoginForm}
-            className="submit-button"
-          >
+            className="submit-button">
             LOGIN
           </Button>
         </form>
@@ -162,8 +175,7 @@ function LoginRegisterModal({
             variant="contained"
             color="primary"
             onClick={submitRegisterForm}
-            className="submit-button"
-          >
+            className="submit-button">
             REGISTER
           </Button>
         </form>
