@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import Header from "../../common/header/Header";
 import "./Details.css";
 import YouTube from "react-youtube";
+import RatingStars from "../../common/rating-stars/RatingStars";
 
 // material-ui imports
 import Typography from "@material-ui/core/Typography";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
-import RatingStars from "../../common/rating-stars/RatingStars";
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
+import GridListTileBar from "@material-ui/core/GridListTileBar";
 
 function Details(props) {
   const [movieDetails, setMovieDetails] = useState();
@@ -100,6 +102,19 @@ function Details(props) {
             <Typography className="artists-block-title bold-text">
               Artists:
             </Typography>
+            <GridList className="movie-artists" cols={2} spacing={16}>
+              {movieDetails.artists.map((artist) => (
+                <GridListTile key={artist.profile_url}>
+                  <img
+                    src={artist.profile_url}
+                    alt={`${artist.first_name} ${artist.last_name}`}
+                  />
+                  <GridListTileBar
+                    title={`${artist.first_name} ${artist.last_name}`}
+                  />
+                </GridListTile>
+              ))}
+            </GridList>
           </div>
         </div>
       )}

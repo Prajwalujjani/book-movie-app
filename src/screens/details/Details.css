@@ -12,6 +12,7 @@
 }
 .main-container > .right {
   width: 20%;
+  padding: 0px 16px;
 }
 
 .main-container > .left > img {
@@ -20,6 +21,7 @@
 
 .main-container > .middle {
   width: 60%;
+  padding: 0px 16px;
 }
 
 div.back-to-home-button {
