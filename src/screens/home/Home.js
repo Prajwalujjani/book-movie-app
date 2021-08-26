@@ -44,15 +44,6 @@ function Home(props) {
   const [artists, setArtists] = useState([]);
   const [filters, setFilters] = useState(initialFilters);
 
-  const handleLogin = () => {
-    console.log("handle login");
-  };
-  const handleLogout = () => {
-    console.log("handle logout");
-  };
-  const handleBookShowFromHeader = () => {
-    console.log("handle bookshow click from header");
-  };
   const handleFormInput = (e) => {
     const values = { ...filters };
     values[e.target.name] = e.target.value;
@@ -60,13 +51,7 @@ function Home(props) {
   };
 
   const getUpcomingMovies = () => {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const dd = today.getDate() < 10 ? `0${today.getDate()}` : today.getDate();
-    const mm =
-      today.getMonth() < 10 ? `0${today.getMonth()}` : today.getMonth();
-    const start_date = `${yyyy}-${mm}-${dd}`; // TODO: Use this in params
-    fetch(props.baseUrl + `movies`, {
+    fetch(props.baseUrl + `movies?status=PUBLISHED`, {
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -79,7 +64,7 @@ function Home(props) {
   };
 
   const getReleasedMovies = () => {
-    fetch(props.baseUrl + `movies`, {
+    fetch(props.baseUrl + `movies?status=RELEASED`, {
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -153,11 +138,11 @@ function Home(props) {
 
   const applyFilters = () => {
     if (
-      filters.movieName == initialFilters.movieName &&
-      filters.releaseDateEnd == initialFilters.releaseDateEnd &&
-      filters.releaseDateStart == initialFilters.releaseDateStart &&
-      filters.genre.join(",") == initialFilters.genre.join(",") &&
-      filters.artist.join(",") == initialFilters.artist.join(",")
+      filters.movieName === initialFilters.movieName &&
+      filters.releaseDateEnd === initialFilters.releaseDateEnd &&
+      filters.releaseDateStart === initialFilters.releaseDateStart &&
+      filters.genre.join(",") === initialFilters.genre.join(",") &&
+      filters.artist.join(",") === initialFilters.artist.join(",")
     ) {
       getReleasedMovies();
       return;
@@ -172,10 +157,7 @@ function Home(props) {
       <div className="upcoming-movies-heading">Upcoming Movies</div>
       <GridList className="upcoming-movies" cols={6} cellHeight={250}>
         {upcomingMovies.map((movie) => (
-          <GridListTile
-            key={movie.poster_url}
-            className="clickable-movie-poster"
-            onClick={getMovieClickHandler(movie.id)}>
+          <GridListTile key={movie.poster_url}>
             <img src={movie.poster_url} alt={movie.title} />
             <GridListTileBar title={movie.title} />
           </GridListTile>
@@ -194,7 +176,12 @@ function Home(props) {
                 className="clickable-movie-poster"
                 onClick={getMovieClickHandler(movie.id)}>
                 <img src={movie.poster_url} alt={movie.title} />
-                <GridListTileBar title={movie.title} />
+                <GridListTileBar
+                  title={movie.title}
+                  subtitle={`Release Date: ${new Date(
+                    movie.release_date
+                  ).toDateString()}`}
+                />
               </GridListTile>
             ))}
           </GridList>

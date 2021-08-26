@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import Header from "../../common/header/Header";
 import "./Details.css";
 import YouTube from "react-youtube";
@@ -47,7 +47,7 @@ function Details(props) {
         onClick={() => {
           props.history.push("/");
         }}>
-        &#60; Back to home
+        &#60; Back to Home
       </Typography>
       {movieDetails && (
         <div className="main-container">
@@ -98,22 +98,26 @@ function Details(props) {
             <div className="rating-stars-container">
               <RatingStars />
             </div>
-            <Typography className="artists-block-title bold-text">
-              Artists:
-            </Typography>
-            <GridList className="movie-artists" cols={2} spacing={16}>
-              {movieDetails.artists.map((artist) => (
-                <GridListTile key={artist.profile_url}>
-                  <img
-                    src={artist.profile_url}
-                    alt={`${artist.first_name} ${artist.last_name}`}
-                  />
-                  <GridListTileBar
-                    title={`${artist.first_name} ${artist.last_name}`}
-                  />
-                </GridListTile>
-              ))}
-            </GridList>
+            {movieDetails.artists && (
+              <Fragment>
+                <Typography className="artists-block-title bold-text">
+                  Artists:
+                </Typography>
+                <GridList className="movie-artists" cols={2} spacing={16}>
+                  {movieDetails.artists.map((artist) => (
+                    <GridListTile key={artist.profile_url}>
+                      <img
+                        src={artist.profile_url}
+                        alt={`${artist.first_name} ${artist.last_name}`}
+                      />
+                      <GridListTileBar
+                        title={`${artist.first_name} ${artist.last_name}`}
+                      />
+                    </GridListTile>
+                  ))}
+                </GridList>
+              </Fragment>
+            )}
           </div>
         </div>
       )}

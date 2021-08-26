@@ -4,7 +4,7 @@ import StarBorder from "@material-ui/icons/StarBorder";
 import { useState } from "react";
 
 function RatingStars() {
-  const initialRating = 3;
+  const initialRating = 0;
   const [rating, setRating] = useState(initialRating);
 
   const getStarColor = (starRating) => {
